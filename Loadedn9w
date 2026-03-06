@@ -345,7 +345,7 @@ end)
 DeluxExecBtn.MouseButton1Click:Connect(function()
     
     game.StarterGui:SetCore("SendNotification", {
-    Title = Em breve :/";
+    Title = "Em breve :/";
     Text = "coming soon";
     Duration = 5;
 })

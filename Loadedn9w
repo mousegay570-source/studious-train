@@ -1,0 +1,481 @@
+-- SanderXY UI Script
+-- Made for Roblox (BrookHaven / Universal)
+-- Author: [YOUR NAME HERE]
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+
+local LocalPlayer = Players.LocalPlayer
+
+-- ================================================
+-- CONFIG
+-- ================================================
+local DISCORD_LINK = "discord.gg/bZyMGmjqUe" -- ganti link discord kamu
+local LOGO_IMAGE_ID = "rbxassetid://6675554347"    -- ganti dengan image ID logo kamu
+local NORMAL_IMAGE_ID = "rbxassetid://9075557650"  -- ganti dengan image ID tab Normal
+local DELUX_IMAGE_ID = "rbxassetid://12329793390"   -- ganti dengan image ID tab Delux (orange)
+
+-- ================================================
+-- DESTROY OLD GUI
+-- ================================================
+if CoreGui:FindFirstChild("SanderXY_GUI") then
+    CoreGui:FindFirstChild("SanderXY_GUI"):Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "SanderXY_GUI"
+ScreenGui.ResetOnSpawn   = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.DisplayOrder   = 9999
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.Parent = CoreGui
+
+-- ================================================
+-- MAIN FRAME - KOTAK (no UICorner)
+-- ================================================
+local W, H = 400, 300
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, W, 0, H)
+MainFrame.Position = UDim2.new(0.5, -W/2, 0.5, -H/2)
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.Parent = ScreenGui
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(50, 50, 70)
+MainStroke.Thickness = 1.5
+MainStroke.Parent = MainFrame
+
+-- ================================================
+-- HEADER BAR
+-- ================================================
+local HeaderBar = Instance.new("Frame")
+HeaderBar.Name = "HeaderBar"
+HeaderBar.Size = UDim2.new(1, 0, 0, 32)
+HeaderBar.Position = UDim2.new(0, 0, 0, 0)
+HeaderBar.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+HeaderBar.BorderSizePixel = 0
+HeaderBar.Parent = MainFrame
+
+-- Logo Image (kiri atas)
+local LogoImage = Instance.new("ImageLabel")
+LogoImage.Size = UDim2.new(0, 22, 0, 22)
+LogoImage.Position = UDim2.new(0, 6, 0.5, -11)
+LogoImage.BackgroundTransparency = 1
+LogoImage.Image = LOGO_IMAGE_ID
+LogoImage.Parent = HeaderBar
+
+-- Logo Text
+local LogoText = Instance.new("TextLabel")
+LogoText.Size = UDim2.new(0, 100, 1, 0)
+LogoText.Position = UDim2.new(0, 32, 0, 0)
+LogoText.BackgroundTransparency = 1
+LogoText.Text = "Xavier Hub"
+LogoText.TextColor3 = Color3.fromRGB(0, 210, 255)
+LogoText.Font = Enum.Font.GothamBold
+LogoText.TextSize = 13
+LogoText.TextXAlignment = Enum.TextXAlignment.Left
+LogoText.Parent = HeaderBar
+
+-- Close Button
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 24, 0, 24)
+CloseBtn.Position = UDim2.new(1, -28, 0.5, -12)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseBtn.Text = "X"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 11
+CloseBtn.BorderSizePixel = 0
+CloseBtn.Parent = HeaderBar
+
+CloseBtn.MouseButton1Click:Connect(function()
+    local tw = TweenService:Create(MainFrame,
+        TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.In),
+        { Size = UDim2.new(0,0,0,0), Position = UDim2.new(0.5,0,0.5,0) }
+    )
+    tw:Play()
+    tw.Completed:Connect(function() ScreenGui:Destroy() end)
+end)
+CloseBtn.MouseEnter:Connect(function()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(255,70,70)}):Play()
+end)
+CloseBtn.MouseLeave:Connect(function()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(200,50,50)}):Play()
+end)
+
+-- ================================================
+-- ANNOUNCEMENT BAR
+-- ================================================
+local AnnounceBar = Instance.new("Frame")
+AnnounceBar.Size = UDim2.new(1, 0, 0, 28)
+AnnounceBar.Position = UDim2.new(0, 0, 0, 32)
+AnnounceBar.BackgroundColor3 = Color3.fromRGB(190, 30, 30)
+AnnounceBar.BorderSizePixel = 0
+AnnounceBar.Parent = MainFrame
+
+local AnnounceText = Instance.new("TextLabel")
+AnnounceText.Size = UDim2.new(1, 0, 1, 0)
+AnnounceText.BackgroundTransparency = 1
+AnnounceText.Text = "Thank you for using"
+AnnounceText.TextColor3 = Color3.fromRGB(255, 255, 255)
+AnnounceText.Font = Enum.Font.GothamBold
+AnnounceText.TextSize = 12
+AnnounceText.Parent = AnnounceBar
+
+-- ================================================
+-- BODY AREA
+-- ================================================
+local BodyFrame = Instance.new("Frame")
+BodyFrame.Size = UDim2.new(1, 0, 1, -60)
+BodyFrame.Position = UDim2.new(0, 0, 0, 60)
+BodyFrame.BackgroundTransparency = 1
+BodyFrame.Parent = MainFrame
+
+-- ================================================
+-- LEFT SIDEBAR - KOTAK
+-- ================================================
+local Sidebar = Instance.new("Frame")
+Sidebar.Size = UDim2.new(0, 110, 1, 0)
+Sidebar.BackgroundColor3 = Color3.fromRGB(14, 14, 20)
+Sidebar.BorderSizePixel = 0
+Sidebar.Parent = BodyFrame
+
+local SidebarLayout = Instance.new("UIListLayout")
+SidebarLayout.Padding = UDim.new(0, 4)
+SidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SidebarLayout.Parent = Sidebar
+
+local SidebarPadding = Instance.new("UIPadding")
+SidebarPadding.PaddingTop = UDim.new(0, 8)
+SidebarPadding.PaddingLeft = UDim.new(0, 6)
+SidebarPadding.PaddingRight = UDim.new(0, 6)
+SidebarPadding.Parent = Sidebar
+
+-- ================================================
+-- CONTENT AREA
+-- ================================================
+local ContentArea = Instance.new("Frame")
+ContentArea.Size = UDim2.new(1, -114, 1, 0)
+ContentArea.Position = UDim2.new(0, 114, 0, 0)
+ContentArea.BackgroundTransparency = 1
+ContentArea.ClipsDescendants = true
+ContentArea.Parent = BodyFrame
+
+-- ================================================
+-- CLOSE WITH ANIMATION (smooth shrink)
+-- ================================================
+local function closeWithAnimation()
+    -- Pertama scale ke atas sedikit (bounce effect)
+    local currentPos = MainFrame.Position
+    local currentSize = MainFrame.Size
+
+    -- Step 1: sedikit membesar dulu (0.08s)
+    local tw1 = TweenService:Create(MainFrame,
+        TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        {
+            Size = UDim2.new(0, W * 1.05, 0, H * 1.05),
+            Position = UDim2.new(
+                currentPos.X.Scale, currentPos.X.Offset - W * 0.025,
+                currentPos.Y.Scale, currentPos.Y.Offset - H * 0.025
+            )
+        }
+    )
+    tw1:Play()
+    tw1.Completed:Connect(function()
+        -- Step 2: mengecil ke titik tengah smooth (0.28s)
+        local midX = MainFrame.Position.X.Offset + W * 1.05 / 2
+        local midY = MainFrame.Position.Y.Offset + H * 1.05 / 2
+        local tw2 = TweenService:Create(MainFrame,
+            TweenInfo.new(0.28, Enum.EasingStyle.Back, Enum.EasingDirection.In),
+            {
+                Size = UDim2.new(0, 0, 0, 0),
+                Position = UDim2.new(0, midX, 0, midY)
+            }
+        )
+        tw2:Play()
+        tw2.Completed:Connect(function()
+            ScreenGui:Destroy()
+        end)
+    end)
+end
+
+-- ================================================
+-- TAB SYSTEM
+-- ================================================
+local Tabs = {}
+local TabContents = {}
+local ActiveTab = nil
+
+local function setActiveTab(name)
+    if ActiveTab == name then return end
+    ActiveTab = name
+    for tabName, btn in pairs(Tabs) do
+        local isActive = tabName == name
+        local activeColor = (tabName == "Delux") and Color3.fromRGB(255,140,0) or Color3.fromRGB(0,170,255)
+        TweenService:Create(btn, TweenInfo.new(0.18), {
+            BackgroundColor3 = isActive and activeColor or Color3.fromRGB(26,26,36)
+        }):Play()
+        btn.TextColor3 = isActive and Color3.fromRGB(255,255,255) or Color3.fromRGB(150,150,170)
+    end
+    for contentName, frame in pairs(TabContents) do
+        frame.Visible = contentName == name
+    end
+end
+
+local tabOrder = 0
+local function createTab(name)
+    tabOrder += 1
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 0, 36)
+    btn.BackgroundColor3 = Color3.fromRGB(26, 26, 36)
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(150, 150, 170)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 12
+    btn.BorderSizePixel = 0
+    btn.LayoutOrder = tabOrder
+    btn.Parent = Sidebar
+    btn.MouseEnter:Connect(function()
+        if ActiveTab ~= name then
+            TweenService:Create(btn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(36,36,50)}):Play()
+        end
+    end)
+    btn.MouseLeave:Connect(function()
+        if ActiveTab ~= name then
+            TweenService:Create(btn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(26,26,36)}):Play()
+        end
+    end)
+    btn.MouseButton1Click:Connect(function() setActiveTab(name) end)
+    Tabs[name] = btn
+end
+
+local function createContent(name)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -6, 1, -6)
+    frame.Position = UDim2.new(0, 3, 0, 3)
+    frame.BackgroundTransparency = 1
+    frame.Visible = false
+    frame.Parent = ContentArea
+    TabContents[name] = frame
+    return frame
+end
+
+-- ================================================
+-- TABS - urutan: Normal, Delux, Discord, Credits
+-- ================================================
+createTab("Normal")
+createTab("Delux")
+createTab("Discord")
+createTab("Credits")
+
+-- ================================================
+-- NORMAL CONTENT
+-- ================================================
+local NormalContent = createContent("Normal")
+
+local NormalImage = Instance.new("ImageLabel")
+NormalImage.Size = UDim2.new(1, 0, 1, -40)
+NormalImage.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+NormalImage.Image = NORMAL_IMAGE_ID
+NormalImage.ScaleType = Enum.ScaleType.Fit
+NormalImage.BorderSizePixel = 0
+NormalImage.Parent = NormalContent
+
+local ExecuteBtn = Instance.new("TextButton")
+ExecuteBtn.Size = UDim2.new(1, 0, 0, 34)
+ExecuteBtn.Position = UDim2.new(0, 0, 1, -36)
+ExecuteBtn.BackgroundColor3 = Color3.fromRGB(30, 120, 255)
+ExecuteBtn.Text = "Execute now"
+ExecuteBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExecuteBtn.Font = Enum.Font.GothamBold
+ExecuteBtn.TextSize = 12
+ExecuteBtn.BorderSizePixel = 0
+ExecuteBtn.Parent = NormalContent
+
+ExecuteBtn.MouseEnter:Connect(function()
+    TweenService:Create(ExecuteBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(60,145,255)}):Play()
+end)
+ExecuteBtn.MouseLeave:Connect(function()
+    TweenService:Create(ExecuteBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(30,120,255)}):Play()
+end)
+ExecuteBtn.MouseButton1Click:Connect(function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/mousegay570-source/supreme-octo-system/refs/heads/main/CoolLoad"))()
+
+    print("Execute Normal")
+    closeWithAnimation()
+end)
+
+-- ================================================
+-- DELUX CONTENT
+-- ================================================
+local DeluxContent = createContent("Delux")
+
+local DeluxImage = Instance.new("ImageLabel")
+DeluxImage.Size = UDim2.new(1, 0, 1, -40)
+DeluxImage.BackgroundColor3 = Color3.fromRGB(40, 20, 0)
+DeluxImage.Image = DELUX_IMAGE_ID
+DeluxImage.ScaleType = Enum.ScaleType.Fit
+DeluxImage.BorderSizePixel = 0
+DeluxImage.Parent = DeluxContent
+
+local DeluxExecBtn = Instance.new("TextButton")
+DeluxExecBtn.Size = UDim2.new(1, 0, 0, 34)
+DeluxExecBtn.Position = UDim2.new(0, 0, 1, -36)
+DeluxExecBtn.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
+DeluxExecBtn.Text = "Execute Delux"
+DeluxExecBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+DeluxExecBtn.Font = Enum.Font.GothamBold
+DeluxExecBtn.TextSize = 12
+DeluxExecBtn.BorderSizePixel = 0
+DeluxExecBtn.Parent = DeluxContent
+
+DeluxExecBtn.MouseEnter:Connect(function()
+    TweenService:Create(DeluxExecBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(255,165,40)}):Play()
+end)
+DeluxExecBtn.MouseLeave:Connect(function()
+    TweenService:Create(DeluxExecBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(255,140,0)}):Play()
+end)
+DeluxExecBtn.MouseButton1Click:Connect(function()
+    
+    game.StarterGui:SetCore("SendNotification", {
+    Title = Em breve :/";
+    Text = "coming soon";
+    Duration = 5;
+})
+    
+    print("Execute Delux")
+    closeWithAnimation()
+end)
+
+-- ================================================
+-- DISCORD CONTENT
+-- ================================================
+local DiscordContent = createContent("Discord")
+
+local DLayout = Instance.new("UIListLayout")
+DLayout.Padding = UDim.new(0, 8)
+DLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+DLayout.Parent = DiscordContent
+
+local DPad = Instance.new("UIPadding")
+DPad.PaddingTop = UDim.new(0, 10)
+DPad.Parent = DiscordContent
+
+local DiscordTitle = Instance.new("TextLabel")
+DiscordTitle.Size = UDim2.new(1, 0, 0, 36)
+DiscordTitle.BackgroundTransparency = 1
+DiscordTitle.Text = "Join Discord for Update\nand Suggestion!"
+DiscordTitle.TextColor3 = Color3.fromRGB(150, 200, 255)
+DiscordTitle.Font = Enum.Font.GothamBold
+DiscordTitle.TextSize = 12
+DiscordTitle.TextWrapped = true
+DiscordTitle.Parent = DiscordContent
+
+local DiscordLinkLabel = Instance.new("TextLabel")
+DiscordLinkLabel.Size = UDim2.new(1, 0, 0, 24)
+DiscordLinkLabel.BackgroundColor3 = Color3.fromRGB(22, 22, 32)
+DiscordLinkLabel.Text = DISCORD_LINK
+DiscordLinkLabel.TextColor3 = Color3.fromRGB(200, 200, 220)
+DiscordLinkLabel.Font = Enum.Font.Gotham
+DiscordLinkLabel.TextSize = 11
+DiscordLinkLabel.BorderSizePixel = 0
+DiscordLinkLabel.Parent = DiscordContent
+
+local CopyBtn = Instance.new("TextButton")
+CopyBtn.Size = UDim2.new(1, 0, 0, 34)
+CopyBtn.BackgroundColor3 = Color3.fromRGB(40, 180, 90)
+CopyBtn.Text = "Copy Discord Link"
+CopyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CopyBtn.Font = Enum.Font.GothamBold
+CopyBtn.TextSize = 12
+CopyBtn.BorderSizePixel = 0
+CopyBtn.Parent = DiscordContent
+
+CopyBtn.MouseEnter:Connect(function()
+    TweenService:Create(CopyBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(60,210,110)}):Play()
+end)
+CopyBtn.MouseLeave:Connect(function()
+    TweenService:Create(CopyBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(40,180,90)}):Play()
+end)
+CopyBtn.MouseButton1Click:Connect(function()
+    setclipboard(DISCORD_LINK)
+    local orig = CopyBtn.Text
+    CopyBtn.Text = "Copied!"
+    task.delay(2, function() CopyBtn.Text = orig end)
+end)
+
+-- ================================================
+-- CREDITS CONTENT
+-- ================================================
+local CreditsContent = createContent("Credits")
+
+local CreditsText = Instance.new("TextLabel")
+CreditsText.Size = UDim2.new(1, 0, 1, 0)
+CreditsText.BackgroundTransparency = 1
+-- GANTI ISI TEXT INI SESUAI KAMU
+CreditsText.Text = "Developer: [AstraX]\n\nCo-Dev: [Frak]\n\nUI Designer: [Yumi]\n\nSpecial Thanks: [User]\n\nVersion: 1.0"
+CreditsText.TextColor3 = Color3.fromRGB(200, 200, 220)
+CreditsText.Font = Enum.Font.Gotham
+CreditsText.TextSize = 11
+CreditsText.TextWrapped = true
+CreditsText.TextYAlignment = Enum.TextYAlignment.Top
+CreditsText.Parent = CreditsContent
+
+-- ================================================
+-- DRAGGABLE SMOOTH
+-- ================================================
+local dragging = false
+local dragStartPos, frameStartPos
+
+HeaderBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStartPos = input.Position
+        frameStartPos = MainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
+    or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStartPos
+        TweenService:Create(MainFrame, TweenInfo.new(0.07, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Position = UDim2.new(
+                frameStartPos.X.Scale, frameStartPos.X.Offset + delta.X,
+                frameStartPos.Y.Scale, frameStartPos.Y.Offset + delta.Y
+            )
+        }):Play()
+    end
+end)
+
+-- ================================================
+-- OPEN ANIMATION
+-- ================================================
+MainFrame.Size = UDim2.new(0, 0, 0, 0)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+TweenService:Create(MainFrame,
+    TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    { Size = UDim2.new(0, W, 0, H), Position = UDim2.new(0.5, -W/2, 0.5, -H/2) }
+):Play()
+
+-- ================================================
+-- DEFAULT TAB
+-- ================================================
+task.defer(function()
+    setActiveTab("Normal")
+end)
+
+print("Loaded")
